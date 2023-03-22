@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const DB_MESAS = require('./../db/MesaDB')
+const MesaModel = require('../../models/MesaModel')
 
 
 router.get('/mesa', (req,res)=>{
@@ -8,10 +8,22 @@ router.get('/mesa', (req,res)=>{
         return res.status(200).send(DB_MESAS)
     })
 
-router.post('/mesa', (req,res)=>{
-    DB_MESAS.push(req.body)
+router.post('/mesa', async (req,res)=>{
+   
+try {
+    const mesaCriada = await MesaModel.create({
+        numero:req.body.numero
+    })
+    return res.status(200).send(mesaCriada)
+} catch (error) {
+    if (error.code ==11000) {
+        return res.status(400).send('Mesa já cadastrada!')
+    }
+    return res.status(500).send(error)
+}
+  
     
-        return res.status(200).send(DB_MESAS)
+     
     })
 router.delete('/mesa/:numero',(req,res)=>{
     const numero = req.params.numero
@@ -25,4 +37,4 @@ return res.status(404).send('Mesa nao encontrada')
 })
 
 
-module.exports=router;x
+module.exports=router;
