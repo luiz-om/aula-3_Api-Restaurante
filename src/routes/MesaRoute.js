@@ -3,9 +3,9 @@ const router = express.Router();
 const MesaModel = require('../../models/MesaModel')
 
 
-router.get('/mesa', (req,res)=>{
-
-        return res.status(200).send(DB_MESAS)
+router.get('/mesa', async (req,res)=>{
+const mesas =  await MesaModel.find()
+        return res.status(200).send(mesas)
     })
 
 router.post('/mesa', async (req,res)=>{
